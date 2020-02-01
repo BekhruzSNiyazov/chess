@@ -9,19 +9,19 @@ win = pygame.display.set_mode((width, height))
 
 pygame.display.set_caption("Chess by Bekhruz S. Niyazov")
 
-chessboard = pygame.image.load("chessboard.jpg")
-wpawn = pygame.image.load("wpawn.png")
-wrook = pygame.image.load("wrook.png")
-whorse = pygame.image.load("whorse.png")
-wbishop = pygame.image.load("wbishop.png")
-wqueen = pygame.image.load("wqueen.png")
-wking = pygame.image.load("wking.png")
-bpawn = pygame.image.load("bpawn.png")
-brook = pygame.image.load("brook.png")
-bhorse = pygame.image.load("bhorse.png")
-bbishop = pygame.image.load("bbishop.png")
-bqueen = pygame.image.load("bqueen.png")
-bking = pygame.image.load("bking.png")
+chessboard = pygame.image.load("png/chessboard.jpg")
+wpawn = pygame.image.load("png/wpawn.png")
+wrook = pygame.image.load("png/wrook.png")
+whorse = pygame.image.load("png/whorse.png")
+wbishop = pygame.image.load("png/wbishop.png")
+wqueen = pygame.image.load("png/wqueen.png")
+wking = pygame.image.load("png/wking.png")
+bpawn = pygame.image.load("png/bpawn.png")
+brook = pygame.image.load("png/brook.png")
+bhorse = pygame.image.load("png/bhorse.png")
+bbishop = pygame.image.load("png/bbishop.png")
+bqueen = pygame.image.load("png/bqueen.png")
+bking = pygame.image.load("png/bking.png")
 
 vel = 75
 p = ""
@@ -96,125 +96,286 @@ def move(figure, color, index, pos, steps=1):
 				figures[color][figure][index]["y"] -= vel*steps
 				board[board.index(f"wpawn{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"wpawn{index}"
-				num = str(int(figures[color][figure][index]["p"][1])+1)
+				num = str(int(figures[color][figure][index]["p"][1])+steps)
 				figures[color][figure][index]["p"] = figures[color][figure][index]["p"][0]+num
 		
 		if figure == "r":
 			figure = "rooks"
 			if color == "w":
 				color = "whites"
-				while pos[0] != figures[color][figure][index]["p"][0] or pos[0] != figures[color][figure][index]["p"][1]:
-					if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]):
-						figures[color][figure][index]["x"] -= vel*steps
-						board[board.index(f"wrook{index}")] = figures[color][figure][index]["p"]
-						board[board.index(pos)] = f"wrook{index}"
-						letter = chr(ord(figures[color][figure][index]["p"][0])+1)
-						figures[color][figure][index]["p"] = letter+figures[color][figure][index]["p"][1]
-						break
-					if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]):
-						figures[color][figure][index]["x"] += vel*steps
-						board[board.index(f"wrook{index}")] = figures[color][figure][index]["p"]
-						board[board.index(pos)] = f"wrook{index}"
-						letter = chr(ord(figures[color][figure][index]["p"][0])-1)
-						figures[color][figure][index]["p"] = letter+figures[color][figure][index]["p"][1]
-						break
-					if int(pos[1]) > int(figures[color][figure][index]["p"][1]):
-						figures[color][figure][index]["y"] -= vel*steps
-						board[board.index(f"wrook{index}")] = figures[color][figure][index]["p"]
-						board[board.index(pos)] = f"wrook{index}"
-						num = str(int(figures[color][figure][index]["p"][1])+1)
-						figures[color][figure][index]["p"] = figures[color][figure][index]["p"][0]+num
-						break
-					if int(pos[1]) < int(figures[color][figure][index]["p"][1]):
-						figures[color][figure][index]["y"] += vel*steps
-						board[board.index(f"wrook{index}")] = figures[color][figure][index]["p"]
-						board[board.index(pos)] = f"wrook{index}"
-						num = str(int(figures[color][figure][index]["p"][1])+1)
-						figures[color][figure][index]["p"] = figures[color][figure][index]["p"][0]+num
-						break
+				if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]):
+					figures[color][figure][index]["x"] -= vel*steps
+					board[board.index(f"wrook{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wrook{index}"
+					letter = chr(ord(figures[color][figure][index]["p"][0])+steps)
+					figures[color][figure][index]["p"] = letter+figures[color][figure][index]["p"][1]
+				if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]):
+					figures[color][figure][index]["x"] += vel*steps
+					board[board.index(f"wrook{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wrook{index}"
+					letter = chr(ord(figures[color][figure][index]["p"][0])-steps)
+					figures[color][figure][index]["p"] = letter+figures[color][figure][index]["p"][1]
+				if int(pos[1]) > int(figures[color][figure][index]["p"][1]):
+					figures[color][figure][index]["y"] -= vel*steps
+					board[board.index(f"wrook{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wrook{index}"
+					num = str(int(figures[color][figure][index]["p"][1])+steps)
+					figures[color][figure][index]["p"] = figures[color][figure][index]["p"][0]+num
+				if int(pos[1]) < int(figures[color][figure][index]["p"][1]):
+					figures[color][figure][index]["y"] += vel*steps
+					board[board.index(f"wrook{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wrook{index}"
+					num = str(int(figures[color][figure][index]["p"][1])+steps)
+					figures[color][figure][index]["p"] = figures[color][figure][index]["p"][0]+num
 
 		if figure == "h":
 			figure = "horses"
 			if color == "w":
 				color = "whites"
-				while pos[0] != figures[color][figure][index]["p"][0] or pos[0] != figures[color][figure][index]["p"][1]:
-					if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]) and int(pos[1]) > int(figures[color][figure][index]["p"][1]):
-						if ord(figures[color][figure][index]["p"][0]) - ord(pos[0]) == 1:
-							figures[color][figure][index]["x"] -= vel
-							figures[color][figure][index]["y"] -= vel*2
-							board[board.index(f"whorse{index}")] = figures[color][figure][index]["p"]
-							board[board.index(pos)] = f"whorse{index}"
-							letter = chr(ord(figures[color][figure][index]["p"][0])-1)
-							num = str(int(figures[color][figure][index]["p"][1])+2)
-							figures[color][figure][index]["p"] = letter+num
-							break
-						else:
-							figures[color][figure][index]["x"] -= vel*2
-							figures[color][figure][index]["y"] -= vel
-							board[board.index(f"whorse{index}")] = figures[color][figure][index]["p"]
-							board[board.index(pos)] = f"whorse{index}"
-							letter = chr(ord(figures[color][figure][index]["p"][0])-2)
-							num = str(int(figures[color][figure][index]["p"][1])+1)
-							figures[color][figure][index]["p"] = letter+num
-							break
-					if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]) and int(pos[1]) < int(figures[color][figure][index]["p"][1]):
-						if ord(figures[color][figure][index]["p"][0]) - ord(pos[0]) == 2:
-							figures[color][figure][index]["x"] -= vel*2
-							figures[color][figure][index]["y"] += vel
-							board[board.index(f"whorse{index}")] = figures[color][figure][index]["p"]
-							board[board.index(pos)] = f"whorse{index}"
-							letter = chr(ord(figures[color][figure][index]["p"][0])-2)
-							num = str(int(figures[color][figure][index]["p"][1])-1)
-							figures[color][figure][index]["p"] = letter+num
-							break
-						else:
-							figures[color][figure][index]["x"] -= vel
-							figures[color][figure][index]["y"] += vel*2
-							board[board.index(f"whorse{index}")] = figures[color][figure][index]["p"]
-							board[board.index(pos)] = f"whorse{index}"
-							letter = chr(ord(figures[color][figure][index]["p"][0])-1)
-							num = str(int(figures[color][figure][index]["p"][1])-2)
-							figures[color][figure][index]["p"] = letter+num
-							break
-					if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]) and int(pos[1]) > int(figures[color][figure][index]["p"][1]):
-						if ord(pos[0]) - ord(figures[color][figure][index]["p"][0]) == 1:
-							figures[color][figure][index]["x"] += vel
-							figures[color][figure][index]["y"] -= vel*2
-							board[board.index(f"whorse{index}")] = figures[color][figure][index]["p"]
-							board[board.index(pos)] = f"whorse{index}"
-							letter = chr(ord(figures[color][figure][index]["p"][0])+1)
-							num = str(int(figures[color][figure][index]["p"][1])+2)
-							figures[color][figure][index]["p"] = letter+num
-							break
-						else:
-							figures[color][figure][index]["x"] += vel*2
-							figures[color][figure][index]["y"] -= vel
-							board[board.index(f"whorse{index}")] = figures[color][figure][index]["p"]
-							board[board.index(pos)] = f"whorse{index}"
-							letter = chr(ord(figures[color][figure][index]["p"][0])+2)
-							num = str(int(figures[color][figure][index]["p"][1])+1)
-							figures[color][figure][index]["p"] = letter+num
-							break
-					if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]) and int(pos[1]) < int(figures[color][figure][index]["p"][1]):
-						if ord(pos[0]) - ord(figures[color][figure][index]["p"][0]) == 1:
-							figures[color][figure][index]["x"] += vel
-							figures[color][figure][index]["y"] += vel*2
-							board[board.index(f"whorse{index}")] = figures[color][figure][index]["p"]
-							board[board.index(pos)] = f"whorse{index}"
-							letter = chr(ord(figures[color][figure][index]["p"][0])+1)
-							num = str(int(figures[color][figure][index]["p"][1])-2)
-							figures[color][figure][index]["p"] = letter+num
-							break
-						else:
-							figures[color][figure][index]["x"] += vel*2
-							figures[color][figure][index]["y"] += vel
-							board[board.index(f"whorse{index}")] = figures[color][figure][index]["p"]
-							board[board.index(pos)] = f"whorse{index}"
-							letter = chr(ord(figures[color][figure][index]["p"][0])+2)
-							num = str(int(figures[color][figure][index]["p"][1])-1)
-							figures[color][figure][index]["p"] = letter+num
-							break						
-												
+				if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]) and int(pos[1]) > int(figures[color][figure][index]["p"][1]):
+					if ord(figures[color][figure][index]["p"][0]) - ord(pos[0]) == 1:
+						figures[color][figure][index]["x"] -= vel
+						figures[color][figure][index]["y"] -= vel*2
+						board[board.index(f"whorse{index}")] = figures[color][figure][index]["p"]
+						board[board.index(pos)] = f"whorse{index}"
+						letter = chr(ord(figures[color][figure][index]["p"][0])-1)
+						num = str(int(figures[color][figure][index]["p"][1])+2)
+						figures[color][figure][index]["p"] = letter+num
+					else:
+						figures[color][figure][index]["x"] -= vel*2
+						figures[color][figure][index]["y"] -= vel
+						board[board.index(f"whorse{index}")] = figures[color][figure][index]["p"]
+						board[board.index(pos)] = f"whorse{index}"
+						letter = chr(ord(figures[color][figure][index]["p"][0])-2)
+						num = str(int(figures[color][figure][index]["p"][1])+1)
+						figures[color][figure][index]["p"] = letter+num
+				if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]) and int(pos[1]) < int(figures[color][figure][index]["p"][1]):
+					if ord(figures[color][figure][index]["p"][0]) - ord(pos[0]) == 2:
+						figures[color][figure][index]["x"] -= vel*2
+						figures[color][figure][index]["y"] += vel
+						board[board.index(f"whorse{index}")] = figures[color][figure][index]["p"]
+						board[board.index(pos)] = f"whorse{index}"
+						letter = chr(ord(figures[color][figure][index]["p"][0])-2)
+						num = str(int(figures[color][figure][index]["p"][1])-1)
+						figures[color][figure][index]["p"] = letter+num
+					else:
+						figures[color][figure][index]["x"] -= vel
+						figures[color][figure][index]["y"] += vel*2
+						board[board.index(f"whorse{index}")] = figures[color][figure][index]["p"]
+						board[board.index(pos)] = f"whorse{index}"
+						letter = chr(ord(figures[color][figure][index]["p"][0])-1)
+						num = str(int(figures[color][figure][index]["p"][1])-2)
+						figures[color][figure][index]["p"] = letter+num
+				if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]) and int(pos[1]) > int(figures[color][figure][index]["p"][1]):
+					if ord(pos[0]) - ord(figures[color][figure][index]["p"][0]) == 1:
+						figures[color][figure][index]["x"] += vel
+						figures[color][figure][index]["y"] -= vel*2
+						board[board.index(f"whorse{index}")] = figures[color][figure][index]["p"]
+						board[board.index(pos)] = f"whorse{index}"
+						letter = chr(ord(figures[color][figure][index]["p"][0])+1)
+						num = str(int(figures[color][figure][index]["p"][1])+2)
+						figures[color][figure][index]["p"] = letter+num
+					else:
+						figures[color][figure][index]["x"] += vel*2
+						figures[color][figure][index]["y"] -= vel
+						board[board.index(f"whorse{index}")] = figures[color][figure][index]["p"]
+						board[board.index(pos)] = f"whorse{index}"
+						letter = chr(ord(figures[color][figure][index]["p"][0])+2)
+						num = str(int(figures[color][figure][index]["p"][1])+1)
+						figures[color][figure][index]["p"] = letter+num
+				if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]) and int(pos[1]) < int(figures[color][figure][index]["p"][1]):
+					if ord(pos[0]) - ord(figures[color][figure][index]["p"][0]) == 1:
+						figures[color][figure][index]["x"] += vel
+						figures[color][figure][index]["y"] += vel*2
+						board[board.index(f"whorse{index}")] = figures[color][figure][index]["p"]
+						board[board.index(pos)] = f"whorse{index}"
+						letter = chr(ord(figures[color][figure][index]["p"][0])+1)
+						num = str(int(figures[color][figure][index]["p"][1])-2)
+						figures[color][figure][index]["p"] = letter+num
+					else:
+						figures[color][figure][index]["x"] += vel*2
+						figures[color][figure][index]["y"] += vel
+						board[board.index(f"whorse{index}")] = figures[color][figure][index]["p"]
+						board[board.index(pos)] = f"whorse{index}"
+						letter = chr(ord(figures[color][figure][index]["p"][0])+2)
+						num = str(int(figures[color][figure][index]["p"][1])-1)
+						figures[color][figure][index]["p"] = letter+num
+		
+		if figure == "b":
+			figure = "bishops"
+			if color == "w":
+				color = "whites"
+				if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]) and int(pos[1]) > int(figures[color][figure][index]["p"][1]):
+					figures[color][figure][index]["y"] -= vel*steps
+					figures[color][figure][index]["x"] -= vel*steps
+					board[board.index(f"wbishop{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wbishop{index}"
+					num = str(int(figures[color][figure][index]["p"][1])-steps)
+					letter = chr(ord(figures[color][figure][index]["p"][0])-steps)
+					figures[color][figure][index]["p"] = letter+num
+				if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]) and int(pos[1]) > int(figures[color][figure][index]["p"][1]):
+					figures[color][figure][index]["y"] -= vel*steps
+					figures[color][figure][index]["x"] += vel*steps
+					board[board.index(f"wbishop{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wbishop{index}"
+					num = str(int(figures[color][figure][index]["p"][1])-steps)
+					letter = chr(ord(figures[color][figure][index]["p"][0])+steps)
+					figures[color][figure][index]["p"] = letter+num
+				if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]) and int(pos[1]) < int(figures[color][figure][index]["p"][1]):
+					figures[color][figure][index]["y"] += vel*steps
+					figures[color][figure][index]["x"] -= vel*steps
+					board[board.index(f"wbishop{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wbishop{index}"
+					num = str(int(figures[color][figure][index]["p"][1])-steps)
+					letter = chr(ord(figures[color][figure][index]["p"][0])-steps)
+					figures[color][figure][index]["p"] = letter+num
+				if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]) and int(pos[1]) < int(figures[color][figure][index]["p"][1]):
+					figures[color][figure][index]["y"] += vel*steps
+					figures[color][figure][index]["x"] += vel*steps
+					board[board.index(f"wbishop{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wbishop{index}"
+					num = str(int(figures[color][figure][index]["p"][1])-steps)
+					letter = chr(ord(figures[color][figure][index]["p"][0])+steps)
+					figures[color][figure][index]["p"] = letter+num
+
+		if figure == "q":
+			figure = "queen"
+			if color == "w":
+				color = "whites"
+				if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]) and int(pos[1]) > int(figures[color][figure][index]["p"][1]):
+					figures[color][figure][index]["y"] -= vel*steps
+					figures[color][figure][index]["x"] -= vel*steps
+					board[board.index(f"wqueen{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wqueen{index}"
+					num = str(int(figures[color][figure][index]["p"][1])-steps)
+					letter = chr(ord(figures[color][figure][index]["p"][0])-steps)
+					figures[color][figure][index]["p"] = letter+num
+					return
+				if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]) and int(pos[1]) > int(figures[color][figure][index]["p"][1]):
+					figures[color][figure][index]["y"] -= vel*steps
+					figures[color][figure][index]["x"] += vel*steps
+					board[board.index(f"wqueen{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wqueen{index}"
+					num = str(int(figures[color][figure][index]["p"][1])-steps)
+					letter = chr(ord(figures[color][figure][index]["p"][0])+steps)
+					figures[color][figure][index]["p"] = letter+num
+					return
+				if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]) and int(pos[1]) < int(figures[color][figure][index]["p"][1]):
+					figures[color][figure][index]["y"] += vel*steps
+					figures[color][figure][index]["x"] -= vel*steps
+					board[board.index(f"wqueen{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wqueen{index}"
+					num = str(int(figures[color][figure][index]["p"][1])-steps)
+					letter = chr(ord(figures[color][figure][index]["p"][0])-steps)
+					figures[color][figure][index]["p"] = letter+num
+					return
+				if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]) and int(pos[1]) < int(figures[color][figure][index]["p"][1]):
+					figures[color][figure][index]["y"] += vel*steps
+					figures[color][figure][index]["x"] += vel*steps
+					board[board.index(f"wqueen{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wqueen{index}"
+					num = str(int(figures[color][figure][index]["p"][1])-steps)
+					letter = chr(ord(figures[color][figure][index]["p"][0])+steps)
+					figures[color][figure][index]["p"] = letter+num
+					return
+				if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]):
+					figures[color][figure][index]["x"] -= vel*steps
+					board[board.index(f"wqueen{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wqueen{index}"
+					letter = chr(ord(figures[color][figure][index]["p"][0])+steps)
+					figures[color][figure][index]["p"] = letter+figures[color][figure][index]["p"][1]
+					return
+				if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]):
+					figures[color][figure][index]["x"] += vel*steps
+					board[board.index(f"wqueen{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wqueen{index}"
+					letter = chr(ord(figures[color][figure][index]["p"][0])-steps)
+					figures[color][figure][index]["p"] = letter+figures[color][figure][index]["p"][1]
+					return
+				if int(pos[1]) > int(figures[color][figure][index]["p"][1]):
+					figures[color][figure][index]["y"] -= vel*steps
+					board[board.index(f"wqueen{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wqueen{index}"
+					num = str(int(figures[color][figure][index]["p"][1])+steps)
+					figures[color][figure][index]["p"] = figures[color][figure][index]["p"][0]+num
+					return
+				if int(pos[1]) < int(figures[color][figure][index]["p"][1]):
+					figures[color][figure][index]["y"] += vel*steps
+					board[board.index(f"wqueen{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wqueen{index}"
+					num = str(int(figures[color][figure][index]["p"][1])+steps)
+					figures[color][figure][index]["p"] = figures[color][figure][index]["p"][0]+num
+					return
+
+		if figure == "k":
+			figure = "king"
+			if color == "w":
+				color = "whites"
+				if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]) and int(pos[1]) > int(figures[color][figure][index]["p"][1]):
+					figures[color][figure][index]["y"] -= vel
+					figures[color][figure][index]["x"] -= vel
+					board[board.index(f"wqueen{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wqueen{index}"
+					num = str(int(figures[color][figure][index]["p"][1])-1)
+					letter = chr(ord(figures[color][figure][index]["p"][0])-1)
+					figures[color][figure][index]["p"] = letter+num
+					return
+				if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]) and int(pos[1]) > int(figures[color][figure][index]["p"][1]):
+					figures[color][figure][index]["y"] -= vel
+					figures[color][figure][index]["x"] += vel
+					board[board.index(f"wqueen{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wqueen{index}"
+					num = str(int(figures[color][figure][index]["p"][1])-1)
+					letter = chr(ord(figures[color][figure][index]["p"][0])+1)
+					figures[color][figure][index]["p"] = letter+num
+					return
+				if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]) and int(pos[1]) < int(figures[color][figure][index]["p"][1]):
+					figures[color][figure][index]["y"] += vel
+					figures[color][figure][index]["x"] -= vel
+					board[board.index(f"wqueen{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wqueen{index}"
+					num = str(int(figures[color][figure][index]["p"][1])-1)
+					letter = chr(ord(figures[color][figure][index]["p"][0])-1)
+					figures[color][figure][index]["p"] = letter+num
+					return
+				if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]) and int(pos[1]) < int(figures[color][figure][index]["p"][1]):
+					figures[color][figure][index]["y"] += vel
+					figures[color][figure][index]["x"] += vel
+					board[board.index(f"wqueen{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wqueen{index}"
+					num = str(int(figures[color][figure][index]["p"][1])-1)
+					letter = chr(ord(figures[color][figure][index]["p"][0])+1)
+					figures[color][figure][index]["p"] = letter+num
+					return
+				if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]):
+					figures[color][figure][index]["x"] -= vel
+					board[board.index(f"wqueen{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wqueen{index}"
+					letter = chr(ord(figures[color][figure][index]["p"][0])+1)
+					figures[color][figure][index]["p"] = letter+figures[color][figure][index]["p"][1]
+					return
+				if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]):
+					figures[color][figure][index]["x"] += vel
+					board[board.index(f"wqueen{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wqueen{index}"
+					letter = chr(ord(figures[color][figure][index]["p"][0])-1)
+					figures[color][figure][index]["p"] = letter+figures[color][figure][index]["p"][1]
+					return
+				if int(pos[1]) > int(figures[color][figure][index]["p"][1]):
+					figures[color][figure][index]["y"] -= vel
+					board[board.index(f"wqueen{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wqueen{index}"
+					num = str(int(figures[color][figure][index]["p"][1])+1)
+					figures[color][figure][index]["p"] = figures[color][figure][index]["p"][0]+num
+					return
+				if int(pos[1]) < int(figures[color][figure][index]["p"][1]):
+					figures[color][figure][index]["y"] += vel
+					board[board.index(f"wqueen{index}")] = figures[color][figure][index]["p"]
+					board[board.index(pos)] = f"wqueen{index}"
+					num = str(int(figures[color][figure][index]["p"][1])+1)
+					figures[color][figure][index]["p"] = figures[color][figure][index]["p"][0]+num
+					return
+
 def end_move():
 	global moving
 	moving = False
@@ -326,17 +487,15 @@ def available_moves(color, figure, pos, index):
 					available_moves.append(p)
 				if pos[0]+str(int(pos[1])+2) == p and twoSpaces[index]:
 					available_moves.append(p)
+
 		if figure == "rooks":
 			for p in board:
 				for i in range(8):
-					if pos[0]+str(int(pos[1])+i) == p:
-						available_moves.append(p)
-					if pos[0]+str(int(pos[1])-i) == p:
-						available_moves.append(p)
-					if chr(ord(pos[0])+i)+pos[1] == p:
-						available_moves.append(p)
-					if chr(ord(pos[0])-i)+pos[1] == p:
-						available_moves.append(p)
+					if pos[0]+str(int(pos[1])+i) == p: available_moves.append(p)
+					if pos[0]+str(int(pos[1])-i) == p: available_moves.append(p)
+					if chr(ord(pos[0])+i)+pos[1] == p: available_moves.append(p)
+					if chr(ord(pos[0])-i)+pos[1] == p: available_moves.append(p)
+
 		if figure == "horses":
 			for p in board:
 				if chr(ord(pos[0])+1)+str(int(pos[1])+2) == p:
@@ -355,6 +514,37 @@ def available_moves(color, figure, pos, index):
 					available_moves.append(p)
 				if chr(ord(pos[0])-2)+str(int(pos[1])-1) == p:
 					available_moves.append(p)
+
+		if figure == "bishops":
+			for p in board:
+				for i in range(8):
+					if chr(ord(pos[0])-i)+str(int(pos[1])+i) == p: available_moves.append(p)
+					if chr(ord(pos[0])+i)+str(int(pos[1])+i) == p: available_moves.append(p)
+					if chr(ord(pos[0])-i)+str(int(pos[1])-i) == p: available_moves.append(p)
+					if chr(ord(pos[0])+i)+str(int(pos[1])-i) == p: available_moves.append(p)
+
+		if figure == "queen":
+			for p in board:
+				for i in range(8):
+					if pos[0]+str(int(pos[1])+i) == p: available_moves.append(p)
+					if pos[0]+str(int(pos[1])-i) == p: available_moves.append(p)
+					if chr(ord(pos[0])+i)+pos[1] == p: available_moves.append(p)
+					if chr(ord(pos[0])-i)+pos[1] == p: available_moves.append(p)
+					if chr(ord(pos[0])-i)+str(int(pos[1])+i) == p: available_moves.append(p)
+					if chr(ord(pos[0])+i)+str(int(pos[1])+i) == p: available_moves.append(p)
+					if chr(ord(pos[0])-i)+str(int(pos[1])-i) == p: available_moves.append(p)
+					if chr(ord(pos[0])+i)+str(int(pos[1])-i) == p: available_moves.append(p)
+
+		if figure == "king":
+			for p in board:
+				if pos[0]+str(int(pos[1])+1) == p: available_moves.append(p)
+				if pos[0]+str(int(pos[1])-1) == p: available_moves.append(p)
+				if chr(ord(pos[0])+1)+pos[1] == p: available_moves.append(p)
+				if chr(ord(pos[0])-1)+pos[1] == p: available_moves.append(p)
+				if chr(ord(pos[0])-1)+str(int(pos[1])+1) == p: available_moves.append(p)
+				if chr(ord(pos[0])+1)+str(int(pos[1])+1) == p: available_moves.append(p)
+				if chr(ord(pos[0])-1)+str(int(pos[1])-1) == p: available_moves.append(p)
+				if chr(ord(pos[0])+1)+str(int(pos[1])-1) == p: available_moves.append(p)					
 
 	pygame.display.update()
 	available_moves.append("")
@@ -379,10 +569,8 @@ def redrawWindow(surface):
 	surface.blit(wqueen, get_cor("w", "queen", 0))
 	surface.blit(bqueen, get_cor("b", "queen", 0))
 
-
 	pygame.display.update()
 	
-
 figures = {
 	"whites": {"pawns": {0: {"x": 60, "y": 500, "p": "a1"}, 1: {"x": 135, "y": 500, "p": "b1"}, 2: {"x": 210, "y": 500, "p": "c1"}, 3: {"x": 285, "y": 500, "p": "d1"}, \
 				4: {"x": 360, "y": 500, "p": "e1"}, 5: {"x": 435, "y": 500, "p": "f1"}, 6: {"x": 510, "y": 500, "p": "g1"}, 7: {"x": 585, "y": 500, "p": "h1"}},
@@ -416,7 +604,6 @@ while True:
 
 		for _ in range(8):
 			if p == figures["whites"]["pawns"][_]["p"]:
-				pygame.draw.rect(win, (255, 0, 0), (figures["whites"]["pawns"][_]["x"]-7, figures["whites"]["pawns"][_]["y"]-1, 75, 75), 2)
 				pygame.event.get()
 				while not pygame.mouse.get_pressed()[0]:
 					available_moves("whites", "pawns", p, _)
@@ -438,7 +625,6 @@ while True:
 
 		for _ in range(2):
 			if p == figures["whites"]["rooks"][_]["p"]:
-				pygame.draw.rect(win, (255, 0, 0), (figures["whites"]["rooks"][_]["x"]-7, figures["whites"]["rooks"][_]["y"]-5, 75, 75), 2)
 				pygame.event.get()
 				while not pygame.mouse.get_pressed()[0]:
 					available_moves("whites", "rooks", p, _)
@@ -467,7 +653,6 @@ while True:
 
 		for _ in range(2):
 			if p == figures["whites"]["horses"][_]["p"]:
-				pygame.draw.rect(win, (255, 0, 0), (figures["whites"]["horses"][_]["x"]-7, figures["whites"]["horses"][_]["y"]-5, 75, 75), 2)
 				pygame.event.get()
 				while not pygame.mouse.get_pressed()[0]:
 					available_moves("whites", "horses", p, _)
@@ -493,6 +678,78 @@ while True:
 							end_move()
 							# playerMove = False
 							break
+
+		for _ in range(2):
+			if p == figures["whites"]["bishops"][_]["p"]:
+				pygame.event.get()
+				while not pygame.mouse.get_pressed()[0]:
+					available_moves("whites", "bishops", p, _)
+					pygame.event.get()
+					if pygame.mouse.get_pressed()[0]:
+						position = pygame.mouse.get_pos()
+						position = get_pos(position)
+						if position in available_moves("whites", "bishops", figures["whites"]["bishops"][_]["p"], _):
+							steps = 0
+							if position[0] == figures["whites"]["bishops"][_]["p"][0]:
+								if int(position[1]) > int(figures["whites"]["bishops"][_]["p"][1]):
+									steps = int(position[1]) - int(figures["whites"]["bishops"][_]["p"][1])
+								else:
+									steps = int(figures["whites"]["bishops"][_]["p"][1]) - int(position[1])
+							else:
+								if ord(position[0]) > ord(figures["whites"]["bishops"][_]["p"][0]):
+									steps = ord(position[0]) - ord(figures["whites"]["bishops"][_]["p"][0])
+								else:
+									steps = ord(figures["whites"]["bishops"][_]["p"][0]) - ord(position[0])
+							start_move()
+							move("b", "w", _, position, steps=steps)
+							figures["whites"]["bishops"][_]["p"] = position
+							end_move()
+							# playerMove = False
+							break
+
+	if p == figures["whites"]["queen"][0]["p"]:
+		pygame.event.get()
+		while not pygame.mouse.get_pressed()[0]:
+			available_moves("whites", "queen", p, 0)
+			pygame.event.get()
+			if pygame.mouse.get_pressed()[0]:
+				position = pygame.mouse.get_pos()
+				position = get_pos(position)
+				if position in available_moves("whites", "queen", figures["whites"]["queen"][0]["p"], 0):
+					steps = 0
+					if position[0] == figures["whites"]["queen"][0]["p"][0]:
+						if int(position[1]) > int(figures["whites"]["queen"][0]["p"][1]):
+							steps = int(position[1]) - int(figures["whites"]["queen"][0]["p"][1])
+						else:
+							steps = int(figures["whites"]["queen"][0]["p"][1]) - int(position[1])
+					else:
+						if ord(position[0]) > ord(figures["whites"]["queen"][0]["p"][0]):
+							steps = ord(position[0]) - ord(figures["whites"]["queen"][0]["p"][0])
+						else:
+							steps = ord(figures["whites"]["queen"][0]["p"][0]) - ord(position[0])
+					start_move()
+					move("q", "w", 0, position, steps=steps)
+					figures["whites"]["queen"][0]["p"] = position
+					end_move()
+					# playerMove = False
+					break
+
+	if p == figures["whites"]["king"][0]["p"]:
+		pygame.event.get()
+		while not pygame.mouse.get_pressed()[0]:
+			available_moves("whites", "king", p, 0)
+			pygame.event.get()
+			if pygame.mouse.get_pressed()[0]:
+				position = pygame.mouse.get_pos()
+				position = get_pos(position)
+				if position in available_moves("whites", "king", figures["whites"]["king"][0]["p"], 0):
+					start_move()
+					move("k", "w", 0, position)
+					figures["whites"]["king"][0]["p"] = position
+					end_move()
+					# playerMove = False
+					break
+
 	redrawWindow(win)
 
 exit()
