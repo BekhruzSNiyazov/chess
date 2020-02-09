@@ -1,5 +1,6 @@
 import pygame
 import random
+from datetime import datetime
 
 pygame.init()
 
@@ -10,6 +11,7 @@ win = pygame.display.set_mode((width, height))
 
 pygame.display.set_caption("Chess by Bekhruz S. Niyazov")
 
+icon = pygame.image.load("png/icon.png")
 chessboard = pygame.image.load("png/chessboard.jpg")
 wpawn = pygame.image.load("png/wpawn.png")
 wrook = pygame.image.load("png/wrook.png")
@@ -24,12 +26,15 @@ bbishop = pygame.image.load("png/bbishop.png")
 bqueen = pygame.image.load("png/bqueen.png")
 bking = pygame.image.load("png/bking.png")
 
+pygame.display.set_icon(icon)
+
 vel = 75
 p = ""
 moving = False
 playerMove = True
 twoSpaces = [True for _ in range(8)]
 game = ""
+moveN = 1
 
 board = []
 for _ in range(8):
@@ -82,6 +87,12 @@ board[57] = "wpawn7"
 board[62] = "bpawn7"
 board[63] = "brook1"
 
+date = datetime.now()
+file_name = str(date).replace(":", "-")+"-game.txt"
+
+def read(file_name):
+	return open(file_name, "r").read()
+
 def compMove():
 	global moving, board, figures, playerMove
 
@@ -104,7 +115,9 @@ def start_move():
 	moving = True
 
 def move(figure, color, index, pos, steps=1):
-	global moving, board, playerMove
+	global moving, board, playerMove, game, moveN, file_name, date
+
+	f = open(file_name, "w")
 
 	if moving:
 		if color == "w" and playerMove:
@@ -118,17 +131,32 @@ def move(figure, color, index, pos, steps=1):
 				if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]):
 					figures[color][figure][index]["y"] -= vel*steps
 					figures[color][figure][index]["x"] += vel*steps
+					position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+					position1 = pos[0]+str(int(pos[1])+1)
+					game += f"{moveN}. {position0}-{position1}\t"
+					f.write(game)
+					moveN += 1
 					board[board.index(f"wpawn{index}")] = figures[color][figure][index]["p"]
 					board[board.index(pos)] = f"wpawn{index}"
 					board[board.index(f"{color[0]}pawn{index}")] = figures[color][figure][index]["p"]
 					board[board.index(pos)] = f"{color[0]}pawn{index}"
 				if ord(pos[0]) == ord(figures[color][figure][index]["p"][0]):
 					figures[color][figure][index]["y"] -= vel*steps
+					position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+					position1 = pos[0]+str(int(pos[1])+1)
+					game += f"{moveN}. {position0}-{position1}\t"
+					f.write(game)
+					moveN += 1
 					board[board.index(f"wpawn{index}")] = figures[color][figure][index]["p"]
 					board[board.index(pos)] = f"wpawn{index}"
 				if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]):
 					figures[color][figure][index]["y"] -= vel*steps
 					figures[color][figure][index]["x"] -= vel*steps
+					position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+					position1 = pos[0]+str(int(pos[1])+1)
+					game += f"{moveN}. {position0}-{position1}\t"
+					f.write(game)
+					moveN += 1
 					board[board.index(f"wpawn{index}")] = figures[color][figure][index]["p"]
 					board[board.index(pos)] = f"wpawn{index}"
 					board[board.index(f"{color[0]}pawn{index}")] = figures[color][figure][index]["p"]
@@ -137,17 +165,29 @@ def move(figure, color, index, pos, steps=1):
 				if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]):
 					figures[color][figure][index]["y"] += vel*steps
 					figures[color][figure][index]["x"] += vel*steps
+					position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+					position1 = pos[0]+str(int(pos[1])+1)
+					game += f"{position0}-{position1}\n"
+					f.write(game)
 					board[board.index(f"wpawn{index}")] = figures[color][figure][index]["p"]
 					board[board.index(pos)] = f"wpawn{index}"
 					board[board.index(f"{color[0]}pawn{index}")] = figures[color][figure][index]["p"]
 					board[board.index(pos)] = f"{color[0]}pawn{index}"
 				if ord(pos[0]) == ord(figures[color][figure][index]["p"][0]):
 					figures[color][figure][index]["y"] += vel*steps
+					position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+					position1 = pos[0]+str(int(pos[1])+1)
+					game += f"{position0}-{position1}\n"
+					f.write(game)
 					board[board.index(f"wpawn{index}")] = figures[color][figure][index]["p"]
 					board[board.index(pos)] = f"wpawn{index}"
 				if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]):
 					figures[color][figure][index]["y"] += vel*steps
 					figures[color][figure][index]["x"] -= vel*steps
+					position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+					position1 = pos[0]+str(int(pos[1])+1)
+					game += f"{position0}-{position1}\n"
+					f.write(game)
 					board[board.index(f"wpawn{index}")] = figures[color][figure][index]["p"]
 					board[board.index(pos)] = f"wpawn{index}"
 					board[board.index(f"{color[0]}pawn{index}")] = figures[color][figure][index]["p"]
@@ -157,14 +197,38 @@ def move(figure, color, index, pos, steps=1):
 			figure = "rooks"
 			if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]):
 				figures[color][figure][index]["x"] -= vel*steps
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}rook{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}rook{index}"
 			if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]):
 				figures[color][figure][index]["x"] += vel*steps
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}rook{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}rook{index}"
 			if int(pos[1]) > int(figures[color][figure][index]["p"][1]):
 				figures[color][figure][index]["y"] -= vel*steps
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}rook{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}rook{index}"
 			if int(pos[1]) < int(figures[color][figure][index]["p"][1]):
@@ -178,11 +242,27 @@ def move(figure, color, index, pos, steps=1):
 				if ord(figures[color][figure][index]["p"][0]) - ord(pos[0]) == 1:
 					figures[color][figure][index]["x"] -= vel
 					figures[color][figure][index]["y"] -= vel*2
+					position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+					position1 = pos[0]+str(int(pos[1])+1)
+					if color == "whites":
+						game += f"{moveN}. {position0}-{position1}\t"
+						moveN += 1
+					if color == "blacks":
+						game += f"{position0}-{position1}\n"
+					f.write(game)
 					board[board.index(f"{color[0]}horse{index}")] = figures[color][figure][index]["p"]
 					board[board.index(pos)] = f"{color[0]}horse{index}"
 				else:
 					figures[color][figure][index]["x"] -= vel*2
 					figures[color][figure][index]["y"] -= vel
+					position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+					position1 = pos[0]+str(int(pos[1])+1)
+					if color == "whites":
+						game += f"{moveN}. {position0}-{position1}\t"
+						moveN += 1
+					if color == "blacks":
+						game += f"{position0}-{position1}\n"
+					f.write(game)
 					board[board.index(f"{color[0]}horse{index}")] = figures[color][figure][index]["p"]
 					board[board.index(pos)] = f"{color[0]}horse{index}"
 
@@ -190,33 +270,81 @@ def move(figure, color, index, pos, steps=1):
 				if ord(figures[color][figure][index]["p"][0]) - ord(pos[0]) == 2:
 					figures[color][figure][index]["x"] -= vel*2
 					figures[color][figure][index]["y"] += vel
+					position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+					position1 = pos[0]+str(int(pos[1])+1)
+					if color == "whites":
+						game += f"{moveN}. {position0}-{position1}\t"
+						moveN += 1
+					if color == "blacks":
+						game += f"{position0}-{position1}\n"
+					f.write(game)
 					board[board.index(f"{color[0]}horse{index}")] = figures[color][figure][index]["p"]
 					board[board.index(pos)] = f"{color[0]}horse{index}"
 				else:
 					figures[color][figure][index]["x"] -= vel
 					figures[color][figure][index]["y"] += vel*2
+					position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+					position1 = pos[0]+str(int(pos[1])+1)
+					if color == "whites":
+						game += f"{moveN}. {position0}-{position1}\t"
+						moveN += 1
+					if color == "blacks":
+						game += f"{position0}-{position1}\n"
+					f.write(game)
 					board[board.index(f"{color[0]}horse{index}")] = figures[color][figure][index]["p"]
 					board[board.index(pos)] = f"{color[0]}horse{index}"
 			if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]) and int(pos[1]) > int(figures[color][figure][index]["p"][1]):
 				if ord(pos[0]) - ord(figures[color][figure][index]["p"][0]) == 1:
 					figures[color][figure][index]["x"] += vel
 					figures[color][figure][index]["y"] -= vel*2
+					position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+					position1 = pos[0]+str(int(pos[1])+1)
+					if color == "whites":
+						game += f"{moveN}. {position0}-{position1}\t"
+						moveN += 1
+					if color == "blacks":
+						game += f"{position0}-{position1}\n"
+					f.write(game)
 					board[board.index(f"{color[0]}horse{index}")] = figures[color][figure][index]["p"]
 					board[board.index(pos)] = f"{color[0]}horse{index}"
 				else:
 					figures[color][figure][index]["x"] += vel*2
 					figures[color][figure][index]["y"] -= vel
+					position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+					position1 = pos[0]+str(int(pos[1])+1)
+					if color == "whites":
+						game += f"{moveN}. {position0}-{position1}\t"
+						moveN += 1
+					if color == "blacks":
+						game += f"{position0}-{position1}\n"
+					f.write(game)
 					board[board.index(f"{color[0]}horse{index}")] = figures[color][figure][index]["p"]
 					board[board.index(pos)] = f"{color[0]}horse{index}"
 			if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]) and int(pos[1]) < int(figures[color][figure][index]["p"][1]):
 				if ord(pos[0]) - ord(figures[color][figure][index]["p"][0]) == 1:
 					figures[color][figure][index]["x"] += vel
 					figures[color][figure][index]["y"] += vel*2
+					position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+					position1 = pos[0]+str(int(pos[1])+1)
+					if color == "whites":
+						game += f"{moveN}. {position0}-{position1}\t"
+						moveN += 1
+					if color == "blacks":
+						game += f"{position0}-{position1}\n"
+					f.write(game)
 					board[board.index(f"{color[0]}horse{index}")] = figures[color][figure][index]["p"]
 					board[board.index(pos)] = f"{color[0]}horse{index}"
 				else:
 					figures[color][figure][index]["x"] += vel*2
 					figures[color][figure][index]["y"] += vel
+					position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+					position1 = pos[0]+str(int(pos[1])+1)
+					if color == "whites":
+						game += f"{moveN}. {position0}-{position1}\t"
+						moveN += 1
+					if color == "blacks":
+						game += f"{position0}-{position1}\n"
+					f.write(game)
 					board[board.index(f"{color[0]}horse{index}")] = figures[color][figure][index]["p"]
 					board[board.index(pos)] = f"{color[0]}horse{index}"
 
@@ -226,21 +354,53 @@ def move(figure, color, index, pos, steps=1):
 			if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]) and int(pos[1]) > int(figures[color][figure][index]["p"][1]):
 				figures[color][figure][index]["y"] -= vel*steps
 				figures[color][figure][index]["x"] -= vel*steps
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}bishop{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}bishop{index}"
 			if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]) and int(pos[1]) > int(figures[color][figure][index]["p"][1]):
 				figures[color][figure][index]["y"] -= vel*steps
 				figures[color][figure][index]["x"] += vel*steps
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}bishop{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}bishop{index}"
 			if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]) and int(pos[1]) < int(figures[color][figure][index]["p"][1]):
 				figures[color][figure][index]["y"] += vel*steps
 				figures[color][figure][index]["x"] -= vel*steps
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}bishop{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}bishop{index}"
 			if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]) and int(pos[1]) < int(figures[color][figure][index]["p"][1]):
 				figures[color][figure][index]["y"] += vel*steps
 				figures[color][figure][index]["x"] += vel*steps
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}bishop{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}bishop{index}"
 
@@ -249,44 +409,108 @@ def move(figure, color, index, pos, steps=1):
 			if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]) and int(pos[1]) > int(figures[color][figure][index]["p"][1]):
 				figures[color][figure][index]["y"] -= vel*steps
 				figures[color][figure][index]["x"] -= vel*steps
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}queen{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}queen{index}"
 				return
 			if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]) and int(pos[1]) > int(figures[color][figure][index]["p"][1]):
 				figures[color][figure][index]["y"] -= vel*steps
 				figures[color][figure][index]["x"] += vel*steps
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}queen{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}queen{index}"
 				return
 			if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]) and int(pos[1]) < int(figures[color][figure][index]["p"][1]):
 				figures[color][figure][index]["y"] += vel*steps
 				figures[color][figure][index]["x"] -= vel*steps
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}queen{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}queen{index}"
 				return
 			if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]) and int(pos[1]) < int(figures[color][figure][index]["p"][1]):
 				figures[color][figure][index]["y"] += vel*steps
 				figures[color][figure][index]["x"] += vel*steps
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}queen{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}queen{index}"
 				return
 			if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]):
 				figures[color][figure][index]["x"] -= vel*steps
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}queen{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}queen{index}"
 				return
 			if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]):
 				figures[color][figure][index]["x"] += vel*steps
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}queen{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}queen{index}"
 				return
 			if int(pos[1]) > int(figures[color][figure][index]["p"][1]):
 				figures[color][figure][index]["y"] -= vel*steps
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}queen{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}queen{index}"
 				return
 			if int(pos[1]) < int(figures[color][figure][index]["p"][1]):
 				figures[color][figure][index]["y"] += vel*steps
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}queen{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}queen{index}"
 				return
@@ -296,24 +520,56 @@ def move(figure, color, index, pos, steps=1):
 			if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]) and int(pos[1]) > int(figures[color][figure][index]["p"][1]):
 				figures[color][figure][index]["y"] -= vel
 				figures[color][figure][index]["x"] -= vel
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}king{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}king{index}"
 				return
 			if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]) and int(pos[1]) > int(figures[color][figure][index]["p"][1]):
 				figures[color][figure][index]["y"] -= vel
 				figures[color][figure][index]["x"] += vel
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}king{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}king{index}"
 				return
 			if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]) and int(pos[1]) < int(figures[color][figure][index]["p"][1]):
 				figures[color][figure][index]["y"] += vel
 				figures[color][figure][index]["x"] -= vel
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}king{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}king{index}"
 				return
 			if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]) and int(pos[1]) < int(figures[color][figure][index]["p"][1]):
 				figures[color][figure][index]["y"] += vel
 				figures[color][figure][index]["x"] += vel
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}king{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}king{index}"
 				num = str(int(figures[color][figure][index]["p"][1])-1)
@@ -322,21 +578,53 @@ def move(figure, color, index, pos, steps=1):
 				return
 			if ord(pos[0]) < ord(figures[color][figure][index]["p"][0]):
 				figures[color][figure][index]["x"] -= vel
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}king{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}king{index}"
 				return
 			if ord(pos[0]) > ord(figures[color][figure][index]["p"][0]):
 				figures[color][figure][index]["x"] += vel
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}king{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}king{index}"
 				return
 			if int(pos[1]) > int(figures[color][figure][index]["p"][1]):
 				figures[color][figure][index]["y"] -= vel
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}king{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}king{index}"
 				return
 			if int(pos[1]) < int(figures[color][figure][index]["p"][1]):
 				figures[color][figure][index]["y"] += vel
+				position0 = figures[color][figure][index]["p"][0]+str(int(figures[color][figure][index]["p"][1])+1)
+				position1 = pos[0]+str(int(pos[1])+1)
+				if color == "whites":
+					game += f"{moveN}. {position0}-{position1}\t"
+					moveN += 1
+				if color == "blacks":
+					game += f"{position0}-{position1}\n"
+				f.write(game)
 				board[board.index(f"{color[0]}king{index}")] = figures[color][figure][index]["p"]
 				board[board.index(pos)] = f"{color[0]}king{index}"
 				return
